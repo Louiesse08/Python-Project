@@ -1,0 +1,53 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% block title %}Settings - Survey System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-cog"></i> Settings</h2>
+    <p class="text-muted">Manage your survey system settings</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-info text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <i class="fas fa-chalkboard fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Manage Sections</h5>
+                        <p class="text-muted mb-0">Create and manage sections</p>
+                    </div>
+                </div>
+                <p class="card-text">Create, edit, and delete sections. Changes will be reflected in the registration form.</p>
+                <a href="{% url 'manage_sections' %}" class="btn btn-info">
+                    <i class="fas fa-arrow-right"></i> Go to Manage Sections
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card h-100 stats-card">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; margin-right: 1rem;">
+                        <i class="fas fa-user-graduate fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Manage Students</h5>
+                        <p class="text-muted mb-0">View and manage student accounts</p>
+                    </div>
+                </div>
+                <p class="card-text">View all registered students, edit their information, and manage their access to the system.</p>
+                <a href="{% url 'manage_students' %}" class="btn btn-success">
+                    <i class="fas fa-arrow-right"></i> Go to Manage Students
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

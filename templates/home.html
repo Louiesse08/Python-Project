@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Survey System{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block main_wrapper %}
+{% block content %}
+{% if not user.is_authenticated %}
+<div class="container-fluid px-0">
+<div class="row align-items-center min-vh-100 mx-0 g-0">
+    <!-- Left Column: Welcome Section -->
+    <div class="col-md-6 min-vh-100 d-flex align-items-center">
+        <div class="px-4">
+            <h1 class="display-4 text-primary mb-4">
+                <i class="fas fa-poll"></i> Welcome to Survey System
+            </h1>
+            <p class="lead text-muted">
+                A comprehensive platform designed for educational institutions to create, distribute, and analyze surveys. 
+                Whether you're a student participating in surveys or a teacher managing them, our system provides an intuitive 
+                and efficient way to gather valuable feedback and insights.
+            </p>
+            <p class="text-muted">
+                Get started by logging in to your account or creating a new one to begin your survey journey.
+            </p>
+        </div>
+    </div>
+    
+    <!-- Right Column: Login Form -->
+    <div class="col-md-6 bg-primary min-vh-100 d-flex align-items-center justify-content-center py-5">
+        <div class="card shadow-sm w-100 mx-4 my-5" style="max-width: 450px;">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">LOGIN</h2>
+                {% if form and form.errors %}
+                    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% if form.non_field_errors %}
+                            {{ form.non_field_errors }}
+                        {% else %}
+                            Please enter a correct username and password. Note that both fields may be case-sensitive.
+                        {% endif %}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+                
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ next|default:request.path }}">
+                    
+                    <div class="mb-4">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                        {% if form and form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <button class="btn btn-outline-secondary" type="button" onclick="togglePassword('password')">
+                                <i class="fas fa-eye" id="toggle-icon-password"></i>
+                            </button>
+                        </div>
+                        {% if form and form.password.errors %}
+                            <div class="text-danger small">{{ form.password.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4 text-end">
+                        <a href="{% url 'forgot_password' %}" class="text-decoration-none">Forgot password?</a>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            Login
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p class="mb-0">Don't have an account? <a href="{% url 'register' %}">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+    const field = document.getElementById(fieldId);
+    const icon = document.getElementById('toggle-icon-' + fieldId);
+    
+    if (field.type === 'password') {
+        field.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        field.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+{% else %}
+<div class="container-fluid px-0">
+<div class="text-center">
+    <h3>Welcome back, {{ user.username }}!</h3>
+    <p>You are logged in as a {{ user.profile.role|title }}.</p>
+    {% if user.profile.role == 'student' %}
+        <a href="{% url 'student_dashboard' %}" class="btn btn-primary btn-lg">
+            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+        </a>
+    {% elif user.profile.role == 'teacher' %}
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-success btn-lg">
+            <i class="fas fa-tachometer-alt"></i> Go to Dashboard
+        </a>
+    {% endif %}
+</div>
+</div>
+{% endif %}
+{% endblock %}
+{% endblock %}

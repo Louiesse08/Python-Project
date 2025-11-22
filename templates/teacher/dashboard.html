@@ -1,0 +1,312 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% block title %}Teacher Dashboard - Survey System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
+    <p class="text-muted">Welcome, {{ user.first_name }}! Here's an overview of your surveys and analytics.</p>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_surveys }}</h3>
+                        <p class="mb-0">Total Surveys</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-poll fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_responses }}</h3>
+                        <p class="mb-0">Total Responses</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-users fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card stats-card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ open_surveys_count }}</h3>
+                        <p class="mb-0">Open Surveys</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Overview/Summary Section -->
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Overview & Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                            <div>
+                                <strong>Active Surveys</strong>
+                                <p class="mb-0 text-muted">{{ active_surveys }} out of {{ total_surveys }}</p>
+                            </div>
+                            <div class="text-primary">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                            <div>
+                                <strong>Closed Surveys</strong>
+                                <p class="mb-0 text-muted">{{ closed_surveys_count }} surveys</p>
+                            </div>
+                            <div class="text-danger">
+                                <i class="fas fa-lock fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                            <div>
+                                <strong>Average Responses</strong>
+                                <p class="mb-0 text-muted">{{ avg_responses_per_survey }} per survey</p>
+                            </div>
+                            <div class="text-success">
+                                <i class="fas fa-calculator fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded">
+                            <div>
+                                <strong>Response Rate</strong>
+                                <p class="mb-0 text-muted">
+                                    {% if total_surveys > 0 %}
+                                        {{ total_responses|floatformat:0 }} responses
+                                    {% else %}
+                                        No data yet
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="text-info">
+                                <i class="fas fa-percentage fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-trophy"></i> Top Surveys</h5>
+            </div>
+            <div class="card-body">
+                {% if surveys_with_counts %}
+                    <ul class="list-group list-group-flush">
+                        {% for survey in surveys_with_counts %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <strong>{{ survey.title|truncatechars:25 }}</strong>
+                                <br>
+                                <small class="text-muted">{{ survey.response_count }} responses</small>
+                            </div>
+                            <a href="{% url 'analytics' survey.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-chart-bar"></i>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted text-center">No survey data yet</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Analytics & Visualizations</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="p-0 border rounded analytics-card h-100">
+                            <div class="p-3 border-bottom text-center text-lg-start">
+                                <span class="text-muted text-uppercase small fw-semibold">Response Volume</span>
+                                <p class="text-muted small mb-0">Last {{ responses_chart_labels|length }} surveys</p>
+                            </div>
+                            <div class="p-3">
+                                <canvas id="responsesBarChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-0 border rounded analytics-card h-100">
+                            <div class="p-3 border-bottom text-center text-lg-start">
+                                <span class="text-muted text-uppercase small fw-semibold">Survey Status</span>
+                                <p class="text-muted small mb-0">Draft vs Active vs Closed</p>
+                            </div>
+                            <div class="p-3">
+                                <canvas id="surveyStatusChart" height="220"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="p-0 border rounded analytics-card">
+                            <div class="p-3 border-bottom text-center text-lg-start">
+                                <span class="text-muted text-uppercase small fw-semibold">Word Cloud</span>
+                                <p class="text-muted small mb-0">Common words from responses</p>
+                            </div>
+                            <div class="p-3">
+                                <div id="dashboard-word-cloud" class="word-cloud-container text-muted" style="min-height: 200px;">
+                                    Loading word cloud...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const responseLabels = {{ responses_chart_labels|default:"[]"|safe }};
+    const responseCounts = {{ responses_chart_counts|default:"[]"|safe }};
+    const statusLabels = {{ status_chart_labels|default:"[]"|safe }};
+    const statusData = {{ status_chart_data|default:"[]"|safe }};
+
+    const barCtx = document.getElementById('responsesBarChart');
+    if (barCtx && responseLabels.length) {
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: responseLabels,
+                datasets: [{
+                    label: 'Responses',
+                    data: responseCounts,
+                    backgroundColor: '#0d6efd'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision:0 }
+                    }
+                }
+            }
+        });
+    }
+
+    const pieCtx = document.getElementById('surveyStatusChart');
+    if (pieCtx && statusLabels.length) {
+        new Chart(pieCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    data: statusData,
+                    backgroundColor: ['#198754', '#6c757d', '#0d6efd']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // Word Cloud
+    const wordCloudData = {{ word_cloud_data|default:"[]"|safe }};
+    const wordCloudContainer = document.getElementById('dashboard-word-cloud');
+    if (wordCloudContainer && wordCloudData.length > 0) {
+        function tokenize(text) {
+            if (!text) return [];
+            return text.toLowerCase()
+                .replace(/[^\w\s]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 2);
+        }
+
+        const frequencyMap = {};
+        wordCloudData.forEach(response => {
+            tokenize(response).forEach(word => {
+                frequencyMap[word] = (frequencyMap[word] || 0) + 1;
+            });
+        });
+
+        const entries = Object.entries(frequencyMap).sort((a, b) => b[1] - a[1]);
+        if (entries.length > 0) {
+            wordCloudContainer.innerHTML = '';
+            wordCloudContainer.classList.remove('text-muted');
+
+            const maxFrequency = entries[0][1];
+            const minFrequency = entries[entries.length - 1][1];
+            const minFontSize = 0.9;
+            const maxFontSize = 2.5;
+            const fontSizeRange = maxFontSize - minFontSize;
+
+            entries.slice(0, 50).forEach(([word, count]) => {
+                const weight = maxFrequency > minFrequency 
+                    ? (count - minFrequency) / (maxFrequency - minFrequency)
+                    : 1;
+                const fontSize = minFontSize + (weight * fontSizeRange);
+                
+                const span = document.createElement('span');
+                span.textContent = word;
+                span.className = 'word-cloud-word';
+                span.style.fontSize = fontSize.toFixed(2) + 'rem';
+                span.title = `Used ${count} time${count !== 1 ? 's' : ''}`;
+                span.style.cursor = 'help';
+                span.style.order = Math.round(Math.random() * 100);
+                wordCloudContainer.appendChild(span);
+            });
+        } else {
+            wordCloudContainer.textContent = 'No text responses yet.';
+            wordCloudContainer.classList.add('text-muted');
+        }
+    } else if (wordCloudContainer) {
+        wordCloudContainer.textContent = 'No text responses yet.';
+        wordCloudContainer.classList.add('text-muted');
+    }
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,282 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% block title %}Manage Students - Survey System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-user-graduate"></i> Manage Students</h2>
+    <p class="text-muted">View and manage all registered students.</p>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-3">
+        <div class="card stats-card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ total_students }}</h3>
+                        <p class="mb-0">Total Students</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-users fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card stats-card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ active_students }}</h3>
+                        <p class="mb-0">Active Students</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-check-circle fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card stats-card bg-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3 class="mb-0">{{ inactive_students }}</h3>
+                        <p class="mb-0">Inactive Students</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-ban fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filters -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Search</label>
+                <input type="text" class="form-control" name="search" 
+                       placeholder="Search by name, username, or email..." 
+                       value="{{ search_query }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Section</label>
+                <select class="form-select" name="section">
+                    <option value="">All Sections</option>
+                    {% for section in sections %}
+                    <option value="{{ section.id }}" {% if section_filter == section.id|stringformat:"s" %}selected{% endif %}>
+                        {{ section.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Status</label>
+                <select class="form-select" name="status">
+                    <option value="">All Status</option>
+                    <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Active</option>
+                    <option value="inactive" {% if status_filter == 'inactive' %}selected{% endif %}>Inactive</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+            </div>
+        </form>
+        {% if search_query or section_filter or status_filter %}
+        <div class="mt-2">
+            <a href="{% url 'manage_students' %}" class="btn btn-sm btn-outline-secondary">
+                <i class="fas fa-times"></i> Clear Filters
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Students Grouped by Section -->
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">
+            <i class="fas fa-list"></i> Students (Grouped by Section)
+            <span class="badge bg-primary">{{ total_students }} total</span>
+        </h5>
+    </div>
+    <div class="card-body">
+        {% if students_by_section or students_without_section %}
+            <!-- Students by Section -->
+            {% for section_id, section_data in students_by_section.items %}
+            <div class="card mb-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chalkboard"></i> {{ section_data.section.name }}
+                        <span class="badge bg-light text-dark ms-2">{{ section_data.students|length }} student{{ section_data.students|length|pluralize }}</span>
+                    </h5>
+                    {% if section_data.section.description %}
+                    <small class="text-white-50">{{ section_data.section.description }}</small>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in section_data.students %}
+                                <tr>
+                                    <td><strong>{{ student.first_name }} {{ student.last_name }}</strong></td>
+                                    <td><small class="text-muted">{{ student.username }}</small></td>
+                                    <td>{{ student.email }}</td>
+                                    <td>
+                                        {% if student.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small>{{ student.date_joined|date:"M d, Y" }}</small></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'edit_student' student.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="{% url 'toggle_student_access' student.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm {% if student.is_active %}btn-outline-warning{% else %}btn-outline-success{% endif %}" 
+                                                        title="{% if student.is_active %}Set Inactive{% else %}Activate{% endif %}"
+                                                        onclick="return confirm('{% if student.is_active %}Mark this student as inactive?{% else %}Activate this student?{% endif %}');">
+                                                    <i class="fas fa-{% if student.is_active %}pause-circle{% else %}play-circle{% endif %}"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Students without Section -->
+            {% if students_without_section %}
+            <div class="card mb-4 border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-slash"></i> No Section Assigned
+                        <span class="badge bg-dark ms-2">{{ students_without_section|length }} student{{ students_without_section|length|pluralize }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students_without_section %}
+                                <tr>
+                                    <td><strong>{{ student.first_name }} {{ student.last_name }}</strong></td>
+                                    <td><small class="text-muted">{{ student.username }}</small></td>
+                                    <td>{{ student.email }}</td>
+                                    <td>
+                                        {% if student.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><small>{{ student.date_joined|date:"M d, Y" }}</small></td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'edit_student' student.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <form method="post" action="{% url 'toggle_student_access' student.id %}" class="d-inline">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm {% if student.is_active %}btn-outline-warning{% else %}btn-outline-success{% endif %}" 
+                                                        title="{% if student.is_active %}Set Inactive{% else %}Activate{% endif %}"
+                                                        onclick="return confirm('{% if student.is_active %}Mark this student as inactive?{% else %}Activate this student?{% endif %}');">
+                                                    <i class="fas fa-{% if student.is_active %}pause-circle{% else %}play-circle{% endif %}"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-user-graduate fa-4x text-muted mb-3"></i>
+            <h5>No Students Found</h5>
+            <p class="text-muted">
+                {% if search_query or section_filter or status_filter %}
+                    Try adjusting your search criteria.
+                {% else %}
+                    No students have been registered yet.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if section_filter %}&section={{ section_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">First</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if section_filter %}&section={{ section_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Previous</a>
+                </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if section_filter %}&section={{ section_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Next</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if section_filter %}&section={{ section_filter }}{% endif %}{% if status_filter %}&status={{ status_filter }}{% endif %}">Last</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

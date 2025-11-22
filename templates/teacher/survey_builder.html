@@ -1,0 +1,96 @@
+{% extends 'teacher/teacher_base.html' %}
+
+{% block title %}Survey Builder - Survey System{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-plus-circle"></i> Create New Survey</h2>
+    <p class="text-muted">Fill out the survey details below.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Survey Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.title.id_for_label }}" class="form-label">Survey Title</label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                        {{ form.description }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">{{ form.description.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.open_time.id_for_label }}" class="form-label">Open Time (Optional)</label>
+                        {{ form.open_time }}
+                        <small class="form-text text-muted d-block mt-1">Set when the survey opens for students. If not set, the survey opens immediately when published.</small>
+                        {% if form.open_time.errors %}
+                            <div class="text-danger small mt-1">{{ form.open_time.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.due_date.id_for_label }}" class="form-label">Due Date</label>
+                        {{ form.due_date }}
+                        {% if form.due_date.errors %}
+                            <div class="text-danger small mt-1">{{ form.due_date.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.time_limit_minutes.id_for_label }}" class="form-label">Time Limit (Minutes, Optional)</label>
+                        {{ form.time_limit_minutes }}
+                        <small class="form-text text-muted d-block mt-1">Leave blank for no time limit. Minimum of 1 minute.</small>
+                        {% if form.time_limit_minutes.errors %}
+                            <div class="text-danger small mt-1">{{ form.time_limit_minutes.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'manage_surveys' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Create Survey
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Tips
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success"></i> Choose a clear, descriptive title</li>
+                    <li><i class="fas fa-check text-success"></i> Provide helpful description</li>
+                    <li><i class="fas fa-check text-success"></i> Set appropriate due date</li>
+                </ul>
+                <p class="text-muted">After creating the survey, add questions and assign sections from the edit page before publishing.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
