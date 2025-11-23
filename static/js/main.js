@@ -177,6 +177,107 @@ document.addEventListener('DOMContentLoaded', function() {
             location.reload();
         }, 30000);
     }
+    
+    // Enhanced card hover effects
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    });
+    
+    // Button ripple effect
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            ripple.classList.add('ripple-effect');
+            this.appendChild(ripple);
+            
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+    
+    // Smooth scroll to top button
+    const scrollTopBtn = document.createElement('button');
+    scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollTopBtn.className = 'btn-scroll-top';
+    scrollTopBtn.style.cssText = `
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #003049 0%, #669BBC 100%);
+        color: white;
+        border: none;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+        z-index: 999;
+    `;
+    
+    document.body.appendChild(scrollTopBtn);
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            scrollTopBtn.style.display = 'flex';
+            scrollTopBtn.style.animation = 'fadeIn 0.3s ease-out';
+        } else {
+            scrollTopBtn.style.display = 'none';
+        }
+    });
+    
+    scrollTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    
+    scrollTopBtn.addEventListener('mouseenter', function() {
+        this.style.transform = 'scale(1.1) rotate(-10deg)';
+        this.style.boxShadow = '0 6px 24px rgba(0, 48, 73, 0.4)';
+    });
+    
+    scrollTopBtn.addEventListener('mouseleave', function() {
+        this.style.transform = 'scale(1) rotate(0deg)';
+        this.style.boxShadow = '0 4px 16px rgba(0, 48, 73, 0.3)';
+    });
+    
+    // Loading state for buttons
+    document.querySelectorAll('form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn && this.checkValidity()) {
+                submitBtn.disabled = true;
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+                
+                // Re-enable after 5 seconds in case of error
+                setTimeout(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                }, 5000);
+            }
+        });
+    });
+    
+    // Enhanced table row animations
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach((row, index) => {
+        row.style.animation = `fadeIn 0.3s ease-out ${index * 0.05}s both`;
+    });
 });
 
 // Utility functions
@@ -201,3 +302,29 @@ function showNotification(message, type = 'info') {
         bsAlert.close();
     }, 5000);
 }
+
+// Ripple effect CSS (dynamically added)
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    .ripple-effect {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0);
+        animation: ripple-animation 0.6s ease-out;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+    
+    .btn {
+        position: relative;
+        overflow: hidden;
+    }
+`;
+document.head.appendChild(rippleStyle);

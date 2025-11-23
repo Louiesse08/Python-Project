@@ -10,10 +10,11 @@
 </head>
 <body>
     {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-lg" style="background: linear-gradient(135deg, #003049 0%, #004a6e 100%) !important;">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-poll"></i> Survey System
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}" style="transition: all 0.3s ease;">
+                <i class="fas fa-poll fa-lg"></i> 
+                <span class="gradient-text" style="background: linear-gradient(135deg, #FDF0D5 0%, #669BBC 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: 700;">Survey System</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -116,13 +117,46 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% load static %}{% static 'js/main.js' %}"></script>
     <script>
-        // Initialize and show toast messages
+        // Smooth scroll behavior
+        document.documentElement.style.scrollBehavior = 'smooth';
+        
+        // Initialize and show toast messages with animations
         document.addEventListener('DOMContentLoaded', function() {
             const toastElements = document.querySelectorAll('.toast');
-            toastElements.forEach(function(toastEl) {
+            toastElements.forEach(function(toastEl, index) {
+                toastEl.style.animation = `fadeIn 0.3s ease-out ${index * 0.1}s both`;
                 const toast = new bootstrap.Toast(toastEl);
-                toast.show();
+                setTimeout(() => toast.show(), index * 100);
             });
+            
+            // Add fade-in animation to page elements
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animation = `fadeIn 0.5s ease-out ${index * 0.05}s both`;
+            });
+            
+            // Add hover effect to navbar brand
+            const navbarBrand = document.querySelector('.navbar-brand');
+            if (navbarBrand) {
+                navbarBrand.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                });
+                navbarBrand.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            }
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+        
+        // Add page transition effect
+        window.addEventListener('beforeunload', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.3s ease-out';
         });
     </script>
     {% block extra_js %}{% endblock %}
