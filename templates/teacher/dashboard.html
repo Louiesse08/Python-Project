@@ -199,19 +199,21 @@
 </div>
 
 <!-- Charts Section -->
-<div class="row mb-4">
+<div class="row mb-5">
     <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Analytics & Visualizations</h5>
+        <div class="card" style="border: 2px solid #e5e7eb; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 48, 73, 0.08);">
+            <div class="card-header" style="background: white; border-bottom: 2px solid #e5e7eb; padding: 1.25rem 1.5rem;">
+                <h5 class="mb-0" style="color: #003049; font-weight: 600;">
+                    <i class="fas fa-chart-pie me-2" style="color: #669BBC;"></i> Analytics & Visualizations
+                </h5>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="padding: 1.75rem;">
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <div class="p-0 border rounded analytics-card h-100">
-                            <div class="p-3 border-bottom text-center text-lg-start">
-                                <span class="text-muted text-uppercase small fw-semibold">Response Volume</span>
-                                <p class="text-muted small mb-0">Last {{ responses_chart_labels|length }} surveys</p>
+                        <div class="p-0 rounded h-100" style="border: 2px solid #e5e7eb; background: white;">
+                            <div class="p-3 text-center text-lg-start" style="border-bottom: 2px solid #e5e7eb; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);">
+                                <span style="color: #003049; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">RESPONSE VOLUME</span>
+                                <p class="mb-0" style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Last {{ responses_chart_labels|length }} surveys</p>
                             </div>
                             <div class="p-3">
                                 <canvas id="responsesBarChart" height="200"></canvas>
@@ -219,10 +221,10 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="p-0 border rounded analytics-card h-100">
-                            <div class="p-3 border-bottom text-center text-lg-start">
-                                <span class="text-muted text-uppercase small fw-semibold">Survey Status</span>
-                                <p class="text-muted small mb-0">Draft vs Active vs Closed</p>
+                        <div class="p-0 rounded h-100" style="border: 2px solid #e5e7eb; background: white;">
+                            <div class="p-3 text-center text-lg-start" style="border-bottom: 2px solid #e5e7eb; background: linear-gradient(135deg, #fef3c7 0%, #FDF0D5 100%);">
+                                <span style="color: #780000; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">SURVEY STATUS</span>
+                                <p class="mb-0" style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Draft vs Active vs Closed</p>
                             </div>
                             <div class="p-3">
                                 <canvas id="surveyStatusChart" height="220"></canvas>
@@ -230,13 +232,13 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="p-0 border rounded analytics-card">
-                            <div class="p-3 border-bottom text-center text-lg-start">
-                                <span class="text-muted text-uppercase small fw-semibold">Word Cloud</span>
-                                <p class="text-muted small mb-0">Common words from responses</p>
+                        <div class="p-0 rounded" style="border: 2px solid #e5e7eb; background: white;">
+                            <div class="p-3 text-center text-lg-start" style="border-bottom: 2px solid #e5e7eb; background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);">
+                                <span style="color: #780000; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px;">WORD CLOUD</span>
+                                <p class="mb-0" style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Common words from responses</p>
                             </div>
                             <div class="p-3">
-                                <div id="dashboard-word-cloud" class="word-cloud-container text-muted" style="min-height: 200px;">
+                                <div id="dashboard-word-cloud" class="word-cloud-container" style="min-height: 200px; color: #6b7280;">
                                     Loading word cloud...
                                 </div>
                             </div>
@@ -264,18 +266,48 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'Responses',
                     data: responseCounts,
-                    backgroundColor: '#0d6efd'
+                    backgroundColor: '#669BBC',
+                    borderColor: '#003049',
+                    borderWidth: 2,
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#003049',
+                        titleColor: '#FDF0D5',
+                        bodyColor: '#FDF0D5',
+                        borderColor: '#669BBC',
+                        borderWidth: 2,
+                        padding: 12,
+                        displayColors: true,
+                        boxPadding: 6
+                    }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { precision:0 }
+                        ticks: { 
+                            precision: 0,
+                            color: '#6b7280',
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: '#e5e7eb',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#003049',
+                            font: { size: 11, weight: 'bold' }
+                        },
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
@@ -290,12 +322,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: statusLabels,
                 datasets: [{
                     data: statusData,
-                    backgroundColor: ['#198754', '#6c757d', '#0d6efd']
+                    backgroundColor: ['#10b981', '#6b7280', '#669BBC'],
+                    borderColor: ['#065f46', '#374151', '#003049'],
+                    borderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
                 plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#003049',
+                            font: { size: 13, weight: 'bold' },
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#003049',
+                        titleColor: '#FDF0D5',
+                        bodyColor: '#FDF0D5',
+                        borderColor: '#669BBC',
+                        borderWidth: 2,
+                        padding: 12
+                    }
                     legend: { position: 'bottom' }
                 }
             }

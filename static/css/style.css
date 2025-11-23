@@ -184,14 +184,15 @@ p {
 }
 
 .btn-success {
-    background: var(--steel-blue);
+    background: #10b981;
     color: white;
     border: none;
 }
 
 .btn-success:hover {
-    background: #5a8aa8;
+    background: #059669;
     color: white;
+    filter: brightness(1.05);
 }
 
 .btn-danger {
@@ -229,24 +230,27 @@ p {
 }
 
 .btn-secondary {
-    background: var(--gray-100);
-    color: var(--gray-700);
+    background: #6b7280;
+    color: white;
+    border: none;
 }
 
 .btn-secondary:hover {
-    background: var(--gray-200);
-    color: var(--gray-900);
+    background: #4b5563;
+    color: white;
+    filter: brightness(1.05);
 }
 
 .btn-outline-primary {
-    border: 2px solid var(--primary-500);
-    color: var(--primary-600);
-    background: transparent;
+    border: 2px solid #669BBC;
+    color: #003049;
+    background: white;
 }
 
 .btn-outline-primary:hover {
-    background: var(--primary-50);
-    border-color: var(--primary-600);
+    background: #669BBC;
+    border-color: #669BBC;
+    color: white;
 }
 
 .btn-group .btn {
@@ -383,33 +387,65 @@ textarea.form-control {
 }
 
 .badge-primary {
-    background: var(--gradient-primary);
+    background: #669BBC;
     color: white;
 }
 
 .badge-success {
-    background-color: var(--success);
+    background: #10b981;
     color: white;
 }
 
 .badge-warning {
-    background: var(--gradient-secondary);
-    color: white;
+    background: #FDF0D5;
+    color: #780000;
+    border: 2px solid #669BBC;
 }
 
 .badge-danger {
-    background: var(--gradient-accent);
+    background: #C1121F;
     color: white;
 }
 
 .badge-info {
-    background-color: var(--brand-blue);
+    background: #003049;
     color: white;
 }
 
 .badge-secondary {
-    background-color: var(--gray-500);
+    background: #6b7280;
     color: white;
+}
+
+/* Bootstrap override for bg-* classes */
+.bg-primary {
+    background: #003049 !important;
+    color: white !important;
+}
+
+.bg-success {
+    background: #10b981 !important;
+    color: white !important;
+}
+
+.bg-danger {
+    background: #C1121F !important;
+    color: white !important;
+}
+
+.bg-warning {
+    background: #FDF0D5 !important;
+    color: #780000 !important;
+}
+
+.bg-info {
+    background: #669BBC !important;
+    color: white !important;
+}
+
+.bg-secondary {
+    background: #6b7280 !important;
+    color: white !important;
 }
 
 /* Enhanced Alert Design */
@@ -454,9 +490,9 @@ textarea.form-control {
     position: relative;
     width: 100%;
     min-height: 220px;
-    background: linear-gradient(135deg, var(--gray-50) 0%, white 100%);
-    border: 2px dashed var(--gray-300);
-    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #f9fafb 0%, white 100%);
+    border: 2px dashed #e5e7eb;
+    border-radius: 12px;
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
@@ -470,21 +506,22 @@ textarea.form-control {
     font-weight: 600;
     letter-spacing: 0.02em;
     padding: 0.5rem 1rem;
-    border-radius: var(--radius-md);
-    color: var(--gray-800);
+    border-radius: 8px;
+    color: #003049;
     background: white;
-    border: 2px solid var(--gray-200);
-    box-shadow: var(--shadow-sm);
-    transition: all var(--transition-fast);
+    border: 2px solid #669BBC;
+    box-shadow: 0 1px 3px rgba(0, 48, 73, 0.1);
+    transition: all 0.2s ease;
     white-space: nowrap;
     line-height: 1.2;
 }
 
 .word-cloud-word:hover {
     transform: translateY(-2px) scale(1.05);
-    box-shadow: var(--shadow-md);
-    border-color: var(--primary-300);
-    color: var(--primary-700);
+    box-shadow: 0 4px 12px rgba(102, 155, 188, 0.3);
+    border-color: #003049;
+    background: #669BBC;
+    color: white;
 }
 
 /* Enhanced Survey Form Styling */
@@ -677,15 +714,27 @@ footer {
 
 /* Utility Classes */
 .text-primary {
-    color: var(--primary-600) !important;
+    color: #003049 !important;
 }
 
-.bg-primary {
-    background-color: var(--primary-600) !important;
+.text-success {
+    color: #10b981 !important;
+}
+
+.text-danger {
+    color: #C1121F !important;
+}
+
+.text-warning {
+    color: #780000 !important;
+}
+
+.text-info {
+    color: #669BBC !important;
 }
 
 .text-muted {
-    color: var(--gray-500) !important;
+    color: #6b7280 !important;
 }
 
 .shadow-sm {
