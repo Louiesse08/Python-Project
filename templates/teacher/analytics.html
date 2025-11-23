@@ -3,45 +3,71 @@
 {% block title %}Analytics: {{ survey.title }} - Survey System{% endblock %}
 
 {% block content %}
-<div class="page-header">
-    <h2><i class="fas fa-chart-bar"></i> Analytics: {{ survey.title }}</h2>
-    <p class="text-muted">View survey analytics and response visualizations.</p>
+<div class="page-header mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h2 style="color: #003049; font-weight: 700;">
+                <i class="fas fa-chart-pie me-2" style="color: #669BBC;"></i> Analytics & Visualizations
+            </h2>
+            <p class="mb-0" style="color: #6b7280; font-size: 1.05rem;">{{ survey.title }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'edit_survey' survey.id %}" class="btn btn-sm" style="background: #6b7280; color: white; border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 500;">
+                <i class="fas fa-edit me-2"></i> Edit Survey
+            </a>
+            <a href="{% url 'manage_surveys' %}" class="btn btn-sm" style="background: #003049; color: white; border: none; padding: 0.625rem 1.25rem; border-radius: 8px; font-weight: 500;">
+                <i class="fas fa-arrow-left me-2"></i> Back
+            </a>
+        </div>
+    </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         
         <!-- Survey Summary -->
-        <div class="row mb-4">
+        <div class="row g-3 mb-5">
             <div class="col-md-3">
-                <div class="card bg-primary text-white">
-                    <div class="card-body text-center">
-                        <h4>{{ questions.count }}</h4>
-                        <p class="mb-0">Questions</p>
+                <div class="card" style="background: #003049; border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 48, 73, 0.15);">
+                    <div class="card-body text-center" style="padding: 1.75rem;">
+                        <div style="background: rgba(255,255,255,0.15); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-question-circle" style="font-size: 1.75rem; color: white;"></i>
+                        </div>
+                        <h3 style="color: white; font-weight: 700; margin-bottom: 0.5rem;">{{ questions.count }}</h3>
+                        <p class="mb-0" style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Questions</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card bg-success text-white">
-                    <div class="card-body text-center">
-                        <h4>{{ survey.responses.count }}</h4>
-                        <p class="mb-0">Responses</p>
+                <div class="card" style="background: #10b981; border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);">
+                    <div class="card-body text-center" style="padding: 1.75rem;">
+                        <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-users" style="font-size: 1.75rem; color: white;"></i>
+                        </div>
+                        <h3 style="color: white; font-weight: 700; margin-bottom: 0.5rem;">{{ survey.responses.count }}</h3>
+                        <p class="mb-0" style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Responses</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card bg-info text-white">
-                    <div class="card-body text-center">
-                        <h4>{{ survey.assigned_sections.count }}</h4>
-                        <p class="mb-0">Sections</p>
+                <div class="card" style="background: #669BBC; border: none; border-radius: 12px; box-shadow: 0 4px 12px rgba(102, 155, 188, 0.15);">
+                    <div class="card-body text-center" style="padding: 1.75rem;">
+                        <div style="background: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-layer-group" style="font-size: 1.75rem; color: white;"></i>
+                        </div>
+                        <h3 style="color: white; font-weight: 700; margin-bottom: 0.5rem;">{{ survey.assigned_sections.count }}</h3>
+                        <p class="mb-0" style="color: rgba(255,255,255,0.9); font-size: 0.9rem;">Sections</p>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card bg-warning text-white">
-                    <div class="card-body text-center">
-                        <h4>{{ survey.due_date|date:"M d" }}</h4>
-                        <p class="mb-0">Due Date</p>
+                <div class="card" style="background: #FDF0D5; border: 2px solid #669BBC; border-radius: 12px; box-shadow: 0 4px 12px rgba(253, 240, 213, 0.3);">
+                    <div class="card-body text-center" style="padding: 1.75rem;">
+                        <div style="background: rgba(102, 155, 188, 0.15); width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                            <i class="fas fa-calendar-alt" style="font-size: 1.75rem; color: #003049;"></i>
+                        </div>
+                        <h3 style="color: #003049; font-weight: 700; margin-bottom: 0.5rem;">{{ survey.due_date|date:"M d" }}</h3>
+                        <p class="mb-0" style="color: #780000; font-size: 0.9rem; font-weight: 500;">Due Date</p>
                     </div>
                 </div>
             </div>
@@ -52,14 +78,14 @@
         <div class="row">
             {% for question in questions %}
             <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0">
+                <div class="card" style="border: 2px solid #e5e7eb; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 48, 73, 0.08);">
+                    <div class="card-header" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-bottom: 2px solid #e5e7eb; padding: 1rem 1.25rem;">
+                        <h6 class="mb-1" style="color: #003049; font-weight: 600;">
                             {{ forloop.counter }}. {{ question.question_text|truncatechars:50 }}
                         </h6>
-                        <small class="text-muted">{{ question.get_question_type_display }}</small>
+                        <small style="color: #669BBC; font-weight: 500; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px;">{{ question.get_question_type_display }}</small>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body" style="padding: 1.5rem;">
                         {% if question.question_type == 'multiple_choice' %}
                             <canvas id="chart_{{ question.id }}" width="400" height="200"></canvas>
                         
@@ -68,10 +94,13 @@
                         
                         {% elif question.question_type == 'short_answer' %}
                             <div class="word-cloud-section">
-                                <div id="word-cloud-{{ question.id }}" class="word-cloud-container text-muted">
-                                    Loading responses...
+                                <div id="word-cloud-{{ question.id }}" class="word-cloud-container" style="color: #6b7280; min-height: 180px; display: flex; align-items: center; justify-content: center;">
+                                    <div class="text-center">
+                                        <i class="fas fa-cloud fa-3x mb-3" style="color: #d1d5db;"></i>
+                                        <p class="mb-0" style="color: #6b7280;">Loading word cloud...</p>
+                                    </div>
                                 </div>
-                                <small class="text-muted d-block mt-2">Word cloud generated from student responses.</small>
+                                <small style="color: #6b7280; display: block; margin-top: 0.75rem; font-size: 0.875rem;">Word cloud generated from student responses.</small>
                             </div>
                         {% endif %}
                     </div>
@@ -80,20 +109,27 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> No questions found in this survey.
+        <div class="card" style="border: 2px solid #e5e7eb; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 48, 73, 0.08);">
+            <div class="card-body text-center" style="padding: 3rem;">
+                <i class="fas fa-question-circle fa-4x mb-3" style="color: #d1d5db;"></i>
+                <h5 style="color: #003049; font-weight: 600; margin-bottom: 1rem;">No Questions Found</h5>
+                <p style="color: #6b7280; margin-bottom: 2rem;">This survey doesn't have any questions yet. Add questions to start collecting responses and viewing analytics.</p>
+                <a href="{% url 'edit_survey' survey.id %}" class="btn" style="background: #003049; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600;">
+                    <i class="fas fa-plus-circle me-2"></i> Add Questions
+                </a>
+            </div>
         </div>
         {% endif %}
 
-        <!-- Action Buttons -->
-        <div class="text-center mt-4">
-            <a href="{% url 'edit_survey' survey.id %}" class="btn btn-outline-secondary">
-                <i class="fas fa-edit"></i> Edit Survey
-            </a>
-            <a href="{% url 'manage_surveys' %}" class="btn btn-outline-dark">
-                <i class="fas fa-arrow-left"></i> Back to Survey Builder
-            </a>
+        {% if survey.responses.count == 0 and questions %}
+        <div class="card mt-4" style="border: 2px solid #FDF0D5; border-radius: 12px; background: linear-gradient(135deg, #fef3c7 0%, #FDF0D5 100%);">
+            <div class="card-body text-center" style="padding: 2rem;">
+                <i class="fas fa-chart-line fa-3x mb-3" style="color: #780000;"></i>
+                <h5 style="color: #780000; font-weight: 600; margin-bottom: 0.75rem;">Waiting for Responses</h5>
+                <p style="color: #92400e; margin-bottom: 0;">No students have submitted responses yet. Once students complete the survey, their data will appear here.</p>
+            </div>
         </div>
+        {% endif %}
     </div>
 </div>
 
@@ -125,10 +161,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const questionData = analyticsData[questionId];
         
         if (!questionData || !questionData.data || Object.keys(questionData.data).length === 0) {
-            ctx.font = '16px Arial';
-            ctx.fillStyle = '#666';
-            ctx.textAlign = 'center';
-            ctx.fillText('No data available', canvas.width / 2, canvas.height / 2);
+            canvas.style.display = 'none';
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'text-center py-5';
+            messageDiv.innerHTML = '<i class="fas fa-chart-bar fa-3x mb-3" style="color: #d1d5db;"></i><p style="color: #6b7280; font-size: 1rem; margin: 0;">No responses yet</p><small style="color: #9ca3af;">Data will appear here once students submit answers</small>';
+            canvas.parentElement.appendChild(messageDiv);
             return;
         }
         
@@ -136,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Multiple Choice Pie Chart
         const labels = Object.keys(questionData.data);
         const values = Object.values(questionData.data);
-        const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'];
+        const colors = ['#669BBC', '#10b981', '#C1121F', '#780000', '#FDF0D5', '#003049', '#6b7280', '#f59e0b'];
         
         new Chart(ctx, {
             type: 'pie',
@@ -144,7 +181,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 labels: labels,
                 datasets: [{
                     data: values,
-                    backgroundColor: colors.slice(0, labels.length)
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderColor: '#ffffff',
+                    borderWidth: 3
                 }]
             },
             options: {
@@ -152,9 +191,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        labels: {
+                            color: '#003049',
+                            font: { size: 13, weight: 'bold' },
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
                     },
                     tooltip: {
+                        backgroundColor: '#003049',
+                        titleColor: '#FDF0D5',
+                        bodyColor: '#FDF0D5',
+                        borderColor: '#669BBC',
+                        borderWidth: 2,
+                        padding: 12,
                         callbacks: {
                             label: function(context) {
                                 const label = context.label || '';
@@ -193,9 +245,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 datasets: [{
                     label: 'Responses',
                     data: values,
-                    backgroundColor: '#36A2EB',
-                    borderColor: '#36A2EB',
-                    borderWidth: 1
+                    backgroundColor: '#669BBC',
+                    borderColor: '#003049',
+                    borderWidth: 2,
+                    borderRadius: 6
                 }]
             },
             options: {
@@ -206,13 +259,36 @@ document.addEventListener('DOMContentLoaded', function() {
                         beginAtZero: true,
                         ticks: {
                             stepSize: 1,
-                            precision: 0
+                            precision: 0,
+                            color: '#6b7280',
+                            font: { size: 12 }
+                        },
+                        grid: {
+                            color: '#e5e7eb',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#003049',
+                            font: { size: 11, weight: 'bold' }
+                        },
+                        grid: {
+                            display: false
                         }
                     }
                 },
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#003049',
+                        titleColor: '#FDF0D5',
+                        bodyColor: '#FDF0D5',
+                        borderColor: '#669BBC',
+                        borderWidth: 2,
+                        padding: 12
                     }
                 }
             }
